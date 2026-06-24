@@ -11,6 +11,12 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+PY=".venv/bin/python"
+if [ ! -x "$PY" ]; then
+  echo "ERROR: $PY not found. Run make setup first." >&2
+  exit 1
+fi
+
 BIN="BONUS-llama-cpp-optimization/llama.cpp/build/bin/llama-server"
 if [ ! -x "$BIN" ]; then
   echo "ERROR: native llama-server not found at $BIN" >&2
@@ -18,8 +24,8 @@ if [ ! -x "$BIN" ]; then
   exit 1
 fi
 
-MODEL=$(python -c 'import json; print(json.load(open("models/active.json"))["primary_model"])')
-THREADS=$(python -c 'import json; hw=json.load(open("hardware.json")); print(hw["cpu"].get("cores_physical") or 4)')
+MODEL=$($PY -c 'import json; print(json.load(open("models/active.json"))["primary_model"])')
+THREADS=$($PY -c 'import json; hw=json.load(open("hardware.json")); print(hw["cpu"].get("cores_physical") or 4)')
 NGL="${LAB_N_GPU_LAYERS:-99}"
 PARALLEL="${LAB_PARALLEL:-4}"
 CTX="${LAB_N_CTX:-2048}"

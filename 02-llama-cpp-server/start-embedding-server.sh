@@ -7,8 +7,14 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-MODEL=$(python -c 'import json; print(json.load(open("models/active.json"))["primary_model"])')
-THREADS=$(python -c 'import json; hw=json.load(open("hardware.json")); print(hw["cpu"].get("cores_physical") or 4)')
+PY=".venv/bin/python"
+if [ ! -x "$PY" ]; then
+  echo "ERROR: $PY not found. Run make setup first." >&2
+  exit 1
+fi
+
+MODEL=$($PY -c 'import json; print(json.load(open("models/active.json"))["primary_model"])')
+THREADS=$($PY -c 'import json; hw=json.load(open("hardware.json")); print(hw["cpu"].get("cores_physical") or 4)')
 
 echo "==> Starting embedding server (prefill-only) on http://0.0.0.0:8081"
 echo "    model   : $MODEL"
@@ -16,7 +22,7 @@ echo "    threads : $THREADS"
 echo
 
 # If your llama-cpp-python version rejects '--embedding true', use '--embedding' alone.
-exec python -m llama_cpp.server \
+exec "$PY" -m llama_cpp.server \
     --model "$MODEL" \
     --embedding true \
     --host 0.0.0.0 --port 8081 \

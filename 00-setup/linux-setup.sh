@@ -24,16 +24,21 @@ python -m pip install --upgrade pip wheel >/dev/null
 echo "==> Installing Python deps from requirements.txt"
 pip install -r requirements.txt
 
+if ! command -v gcc >/dev/null 2>&1 || ! command -v g++ >/dev/null 2>&1; then
+  echo "ERROR: gcc/g++ not found. Install build tools first: sudo apt install -y build-essential cmake pkg-config" >&2
+  exit 1
+fi
+
 # 2. llama-cpp-python (CPU build by default; CUDA build via env override)
 if [[ "${LLAMA_CUDA:-0}" == "1" ]]; then
   echo "==> Building llama-cpp-python with CUDA support (GGML_CUDA=1)"
-  CMAKE_ARGS="-DGGML_CUDA=on" pip install --upgrade --force-reinstall --no-cache-dir "llama-cpp-python[server]"
+  CC=gcc CXX=g++ CMAKE_ARGS="-DGGML_CUDA=on" pip install --upgrade --force-reinstall --no-cache-dir "llama-cpp-python[server]"
 elif [[ "${LLAMA_VULKAN:-0}" == "1" ]]; then
   echo "==> Building llama-cpp-python with Vulkan support"
-  CMAKE_ARGS="-DGGML_VULKAN=on" pip install --upgrade --force-reinstall --no-cache-dir "llama-cpp-python[server]"
+  CC=gcc CXX=g++ CMAKE_ARGS="-DGGML_VULKAN=on" pip install --upgrade --force-reinstall --no-cache-dir "llama-cpp-python[server]"
 else
   echo "==> Installing prebuilt llama-cpp-python (CPU)"
-  pip install --upgrade "llama-cpp-python[server]"
+  CC=gcc CXX=g++ pip install --upgrade "llama-cpp-python[server]"
 fi
 
 # 3. Probe hardware (writes hardware.json)

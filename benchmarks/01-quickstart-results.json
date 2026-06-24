@@ -1,0 +1,36 @@
+{
+  "primary": {
+    "label": "primary (Q4_K_M)",
+    "model_path": "/mnt/e/Vin/Day20-Track2-ModelServing-Lab/models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf",
+    "n_threads": 12,
+    "n_ctx": 2048,
+    "n_batch": 512,
+    "n_gpu_layers": 99,
+    "load_ms": 3210.0,
+    "ttft_ms_p50": 132.8,
+    "ttft_ms_p95": 542.2,
+    "tpot_ms_p50": 56.31,
+    "tpot_ms_p95": 65.93,
+    "e2e_ms_p50": 3562.7,
+    "e2e_ms_p95": 4202.6,
+    "e2e_ms_p99": 4251.8,
+    "decode_rate_tok_s": 17.8
+  },
+  "compare": {
+    "label": "compare (Q2_K)",
+    "model_path": "/mnt/e/Vin/Day20-Track2-ModelServing-Lab/models/tinyllama-1.1b-chat-v1.0.Q2_K.gguf",
+    "n_threads": 12,
+    "n_ctx": 2048,
+    "n_batch": 512,
+    "n_gpu_layers": 99,
+    "load_ms": 1806.3,
+    "ttft_ms_p50": 544.3,
+    "ttft_ms_p95": 711.0,
+    "tpot_ms_p50": 50.76,
+    "tpot_ms_p95": 95.83,
+    "e2e_ms_p50": 3407.7,
+    "e2e_ms_p95": 4713.3,
+    "e2e_ms_p99": 4826.4,
+    "decode_rate_tok_s": 19.7
+  }
+}
